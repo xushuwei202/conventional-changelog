@@ -47,7 +47,7 @@ module.exports = function (callback, opts) {
                     if (matches) {
                         tags.push(tag)
                     }
-                } else {
+                } else if( !!tag ){
                     tags.push(tag)
                 }
             }

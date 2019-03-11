@@ -30,7 +30,7 @@ function conventionalChangelogWriter (context, options) {
         notesSort: 'text',
         generateOn: function (commit) {
             // return semverValid(commit.version)
-            return true;
+            return !!commit.version;
         },
         finalizeContext: function (context) {
             return context

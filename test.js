@@ -1,4 +1,4 @@
-var conventionalChangelog = require('./conventional-changelog')
+var conventionalChangelog = require('./index')
 var fs = require('fs')
 var accessSync = require('fs-access').sync
 const changeLogFile = "CHANGELOG.md";
@@ -15,7 +15,7 @@ function outputChangelog () {
     var changelogStream = conventionalChangelog({
         preset: 'angular',
         releaseCount: 10
-    },{version: '20190311.req.4'})
+    },{version: '20190311.req.5'})
     .on('error', function (err) {
         console.error(err);
     })
