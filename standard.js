@@ -1,4 +1,4 @@
-var conventionalChangelog = require('conventional-changelog')
+var conventionalChangelog = require('./conventional-changelog')
 var fs = require('fs')
 var accessSync = require('fs-access').sync
 const changeLogFile = "CHANGELOG.md";
