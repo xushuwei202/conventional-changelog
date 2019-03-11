@@ -7,10 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "conventional-changelog": "index.js"
+    "conventional-changelog": "cli.js"
   },
   "files": [
-    "cli.js"
+    "index.js"
   ],
   "author": "xushuwei@sogou-inc.com",
   "license": "ISC",
