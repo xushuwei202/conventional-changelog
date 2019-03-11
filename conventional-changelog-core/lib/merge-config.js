@@ -150,7 +150,7 @@ function mergeConfig (options, context, gitRawCommitsOpts, parserOpts, writerOpt
         pkg = pkg || {}
         pkg.repository = pkg.repository || {}
         pkg.repository.url = gitRemoteOriginUrlObj.value
-        normalizePackageData(pkg)
+        //normalizePackageData(pkg)
       }
 
       if (pkg) {

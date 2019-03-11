@@ -17,20 +17,14 @@ function outputChangelog () {
         releaseCount: 10,
         pkg: {
             transform: function (pkg) {
-                pkg.version = '20190307.2.0'
+                pkg.version = '20190311.req.4'
                 return pkg
             }
         }
-    }, {}, {},{
-        mainTemplate: '{{previousTag}}...{{currentTag}}',
-        transform: function (tpl) {
-            console.log(tpl)
-            return null
-        }
     })
-        .on('error', function (err) {
-            console.error(err);
-        })
+    .on('error', function (err) {
+        console.error(err);
+    })
 
     changelogStream.on('data', function (buffer) {
         content += buffer.toString();
