@@ -2,7 +2,7 @@
 
 var gitRawCommits = require('git-raw-commits')
 var conventionalCommitsParser = require('conventional-commits-parser')
-var conventionalChangelogWriter = require('conventional-changelog-writer')
+var conventionalChangelogWriter = require('../conventional-changelog-writer')
 var stream = require('stream')
 var through = require('through2')
 var mergeConfig = require('./lib/merge-config')

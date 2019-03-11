@@ -14,14 +14,8 @@ function outputChangelog () {
     var content = ''
     var changelogStream = conventionalChangelog({
         preset: 'angular',
-        releaseCount: 10,
-        pkg: {
-            transform: function (pkg) {
-                pkg.version = '20190311.req.4'
-                return pkg
-            }
-        }
-    })
+        releaseCount: 10
+    },{version: '20190311.req.4'})
     .on('error', function (err) {
         console.error(err);
     })
