@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 'use strict'
 
+var addStream = require('add-stream')
 var meow = require('meow')
+var tempfile = require('tempfile')
 var _ = require('lodash')
 var resolve = require('path').resolve
 
 var conventionalChangelog = require('./index')
 var fs = require('fs')
-var accessSync = require('fs-access').sync
 const changeLogFile = "CHANGELOG.md";
-var cli = {}
 
 var cli = meow(`
     Usage
@@ -31,6 +31,8 @@ var cli = meow(`
                                 If 0, the whole changelog will be regenerated and the outfile will be overwritten
                                 Default: 1
       -u, --output-unreleased   Output unreleased changelog
+      -v, --verbose             Verbose output. Use this for debugging
+                                Default: false
       -t, --tag                changelog tag version param
                                 Default: false
       -n, --config              A filepath of your config script
@@ -85,8 +87,8 @@ var cli = meow(`
 
 var config
 var flags = cli.flags
-var infile = flags.infile
-var outfile = flags.outfile
+var infile = flags.infile;
+var outfile = flags.outfile;
 var sameFile = flags.sameFile
 var append = flags.append
 var releaseCount = flags.releaseCount
@@ -116,12 +118,17 @@ var options = _.omit({
     tagPrefix: flags.tagPrefix
 }, _.isUndefined)
 
+var templateContext
 var outStream
 
 try {
     if (flags.context) {
         templateContext = require(resolve(process.cwd(), flags.context))
+    } else {
+        templateContext = {};
     }
+
+    templateContext.version = flags.tag;
 
     if (flags.config) {
         config = require(resolve(process.cwd(), flags.config))
@@ -137,34 +144,77 @@ try {
 var gitRawCommitsOpts = _.merge({}, config.gitRawCommitsOpts || {})
 if (flags.commitPath) gitRawCommitsOpts.path = flags.commitPath
 
-function outputChangelog () {
-    createIfMissing()
-    var header = '# Change Log\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n'
+var changelogStream = conventionalChangelog(options,templateContext, gitRawCommitsOpts, config.parserOpts, config.writerOpts)
+    .on('error', function (err) {
+        if (flags.verbose) {
+            console.error(err.stack)
+        } else {
+            console.error(err.toString())
+        }
+        process.exit(1)
+    })
 
-    var content = '';
-    var changelogStream = conventionalChangelog(options,{version: flags.tag})
-        .on('error', function (err) {
-            console.error(err);
+
+
+function noInputFile () {
+    if (outfile) {
+        outStream = fs.createWriteStream(outfile)
+    } else {
+        outStream = process.stdout
+    }
+
+    changelogStream
+        .pipe(outStream)
+}
+
+if (infile && releaseCount !== 0) {
+    var readStream = fs.createReadStream(infile)
+        .on('error', function () {
+            if (flags.verbose) {
+                console.warn('infile does not exist.')
+            }
+            if (sameFile) {
+                noInputFile()
+            }
         })
 
-    changelogStream.on('data', function (buffer) {
-        content += buffer.toString();
-    })
-
-    changelogStream.on('end', function () {
-        fs.writeFileSync(changeLogFile, header + '\n' + (content).replace(/\n+$/, '\n'), 'utf-8');
-    })
-}
-
-
-function createIfMissing () {
-    try {
-        accessSync(changeLogFile, fs.F_OK)
-    } catch (err) {
-        if (err.code === 'ENOENT') {
-            fs.writeFileSync(changeLogFile, '\n', 'utf-8')
+    if (sameFile) {
+        if (options.append) {
+            changelogStream
+                .pipe(fs.createWriteStream(outfile, {
+                    flags: 'a'
+                }))
+        } else {
+            var tmp = tempfile()
+            changelogStream
+                .pipe(addStream(readStream))
+                .pipe(fs.createWriteStream(tmp))
+                .on('finish', function () {
+                    fs.createReadStream(tmp)
+                        .pipe(fs.createWriteStream(outfile))
+                })
         }
+    } else {
+        if (outfile) {
+            outStream = fs.createWriteStream(outfile)
+        } else {
+            outStream = process.stdout
+        }
+
+        var stream
+
+        if (options.append) {
+            stream = readStream
+                .pipe(addStream(changelogStream))
+        } else {
+            stream = changelogStream
+                .pipe(addStream(readStream))
+        }
+
+        stream
+            .pipe(outStream)
     }
+} else {
+    noInputFile()
 }
-outputChangelog ()
 
