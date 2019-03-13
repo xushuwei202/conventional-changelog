@@ -9,7 +9,7 @@ var conventionalChangelog = require('./index')
 var fs = require('fs')
 var accessSync = require('fs-access').sync
 const changeLogFile = "CHANGELOG.md";
-
+var cli = {}
 
 var cli = meow(`
     Usage
