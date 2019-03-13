@@ -10,7 +10,7 @@
     "conventional-changelog": "cli.js"
   },
   "files": [
-    "index.js"
+    "cli.js"
   ],
   "author": "xushuwei@sogou-inc.com",
   "license": "ISC",
