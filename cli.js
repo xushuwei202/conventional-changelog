@@ -31,7 +31,7 @@ var cli = meow(`
                                 If 0, the whole changelog will be regenerated and the outfile will be overwritten
                                 Default: 1
       -u, --output-unreleased   Output unreleased changelog
-      -v, --version             changelog new version param
+      -t, --tag                changelog tag version param
                                 Default: false
       -n, --config              A filepath of your config script
                                 Example of a config script: https://github.com/conventional-changelog/conventional-changelog-angular/blob/master/index.js
@@ -65,8 +65,8 @@ var cli = meow(`
         'output-unreleased': {
             alias: `u`
         },
-        version: {
-            alias: `v`
+        'tag': {
+            alias: `t`
         },
         config: {
             alias: `n`
@@ -78,7 +78,7 @@ var cli = meow(`
             alias: `l`
         },
         'tag-prefix': {
-            alias: `t`
+            alias: `tp`
         }
     }
 })
@@ -142,7 +142,7 @@ function outputChangelog () {
     var header = '# Change Log\n\nAll notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.\n'
 
     var content = '';
-    var changelogStream = conventionalChangelog(options,{version: flags.version})
+    var changelogStream = conventionalChangelog(options,{version: flags.tag})
         .on('error', function (err) {
             console.error(err);
         })
