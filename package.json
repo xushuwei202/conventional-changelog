@@ -1,6 +1,6 @@
 {
-  "name": "conventional-changelog",
-  "version": "1.0.0",
+  "name": "sogou-changelog",
+  "version": "1.0.1",
   "description": "sogou conventional changelog",
   "main": "index.js",
   "scripts": {

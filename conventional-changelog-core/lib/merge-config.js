@@ -222,7 +222,7 @@ function mergeConfig (options, context, gitRawCommitsOpts, parserOpts, writerOpt
       }
 
       gitRawCommitsOpts = _.assign({
-        format: '%B%n-hash-%n%H%n-gitTags-%n%d%n-committerDate-%n%ci',
+        format: '%B%n-hash-%n%H%n-gitTags-%n%d%n-committerName-%n%cn%n-committerDate-%n%ci',
         from: fromTag,
         merges: false,
         debug: options.debug

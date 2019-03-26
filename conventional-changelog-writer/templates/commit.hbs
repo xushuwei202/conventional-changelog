@@ -1,4 +1,10 @@
-* {{header}}
+*{{#if scope}} **{{scope}}:**
+{{~@root.owner}}/{{~this.owner}}/{{~@root.owner}}
+{{~/if}} {{#if subject}}
+   {{~subject}}
+{{~else}}
+  {{~header}}
+{{~/if}}
 
 {{~!-- commit link --}} {{#if @root.linkReferences~}}
   ([{{hash}}](
@@ -53,4 +59,8 @@
     {{~this.repository}}#{{this.issue}}
   {{~/if}}{{/each}}
 {{~/if}}
+
+{{~#if committerName}}
+  [{{~committerName}}]
+{{/if}}
 

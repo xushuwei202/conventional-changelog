@@ -23,6 +23,8 @@ function conventionalChangelogWriter (context, options) {
         context.linkReferences = true
     }
 
+    //增加一个hack方法.
+    delete options.commitPartial;
     options = _.assign({
         groupBy: 'type',
         commitsSort: 'header',

@@ -168,6 +168,10 @@ function generate (options, commits, context, keyCommit) {
 
     context = _.merge({}, context, keyCommit, getExtraContext(filteredCommits, notes, options))
 
+    if (keyCommit && keyCommit.committerName) {
+        context.committer = keyCommit.committerName
+    }
+
     if (keyCommit && keyCommit.committerDate) {
         context.date = keyCommit.committerDate
     }

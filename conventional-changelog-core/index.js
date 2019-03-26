@@ -61,7 +61,6 @@ function conventionalChangelog (options, context, gitRawCommitsOpts, parserOpts,
                             throw err
                         })
                     }
-
                     cb()
                 }, function (cb) {
                     readable.push(null)
